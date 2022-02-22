@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -o pipefail
+
+echo "***************** NLTK *****************"
+
+python3_installed=$(command -v python3)
+if [[ -z "${python3_installed}" ]]; then
+   echo "python3 not detected!"
+   exit 100
+fi
+
+module_installed=$(cat requirements.txt | grep nltk)
+if [[ -z "${module_installed}" ]]; then
+    echo "module 'nltk' not installed!"
+    exit 100
+fi

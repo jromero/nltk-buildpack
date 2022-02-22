@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+set -eo pipefail
+
+split_on_commas() {
+  local IFS=,
+  local WORD_LIST=($1)
+  for word in "${WORD_LIST[@]}"; do
+    echo "$word"
+  done
+}
+
+echo "***************** NLTK *****************"
+
+layers_dir=$1
+
+echo "Creating NLTK_DATA directory..."
+echo -e '[types]\ncache = true\nlaunch = true' > "${layers_dir}/nltk_data.toml"
+data_dir="${layers_dir}"/nltk_data
+mkdir -p $data_dir
+
+echo "Downloading NLTK data..."
+if [[ -z "${NLTK_MODULES}" ]]; then
+  NLTK_MODULES="all"
+fi
+
+split_on_commas "${NLTK_MODULES}" | while read item; do
+    python -m nltk.downloader -d "${data_dir}" "${item}"
+done
+
+echo "Adding NLTK_DATA enviroment variable..."
+envs_dir="${data_dir}"/env
+mkdir -p $envs_dir
+echo -n $data_dir > "${envs_dir}"/NLTK_DATA
