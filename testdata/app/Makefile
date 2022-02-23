@@ -1,4 +1,5 @@
 BUILD_IMAGE_NAME?=test-python-app
+BUILDPACK_PATH?=../../src
 
 .PHONY: format
 format:
@@ -17,5 +18,5 @@ build: format freeze
 		-b google.python.runtime \
 		-b google.python.pip \
 		-b google.config.entrypoint \
-		-b ../../src \
+		-b $(BUILDPACK_PATH) \
 		-v
